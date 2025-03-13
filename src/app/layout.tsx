@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${pretendard.variable} ${caveat.variable} font-[--font-pretendard] max-w-lg mx-auto relative pb-12 h-screen`}>
+        className={`${pretendard.variable} ${caveat.variable} font-[--font-pretendard] max-w-lg mx-auto relative h-screen`}>
         {children}
         <BottomTab />
       </body>
