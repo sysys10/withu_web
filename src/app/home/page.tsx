@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <>
       <TopBar />
-      <main>
+      <main className='pt-2'>
         <div>
           <HomeCarousel />
         </div>
