@@ -19,6 +19,7 @@ const pretendard = localFont({
   ],
   variable: '--font-pretendard'
 })
+
 const caveat = Caveat({
   variable: '--font-caveat',
   subsets: ['latin']
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${pretendard.variable} ${caveat.variable} font-[PretendardVariable] max-w-lg mx-auto relative pb-12 h-screen`}>
+        className={`${pretendard.variable} ${caveat.variable} font-[--font-pretendard] max-w-lg mx-auto relative pb-12 h-screen`}>
         {children}
         <BottomTab />
       </body>

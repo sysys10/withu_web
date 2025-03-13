@@ -1,29 +1,10 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import useForm from '@/hooks/useForm'
+import LoginForm from '@/components/auth/LoginForm'
 
 export default function Page() {
-  const { form, onChange } = useForm({
-    id: '',
-    password: ''
-  })
   return (
-    <div>
-      <Input
-        placeholder='아이디'
-        name='id'
-        value={form.id}
-        onChange={onChange}
-      />
-      <Input
-        placeholder='비밀번호'
-        name='password'
-        value={form.password}
-        onChange={onChange}
-      />
-      <Button size='lg'>로그인</Button>
+    <div className='flex flex-col items-center justify-center h-screen space-y-10 pb-20'>
+      <h1 className='text-4xl font-bold font-caveat'>With U</h1>
+      <LoginForm />
     </div>
   )
 }

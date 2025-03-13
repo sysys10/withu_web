@@ -5,6 +5,8 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
+
 }
 
 enum AuthProvider {
@@ -17,11 +19,15 @@ enum AuthProvider {
 
 model User {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  user_id         String?       @unique
   email           String?       @unique  // 소셜 로그인 시 이메일이 제공되지 않을 수도 있음
-  name            String
+  isComplete      Boolean       @default(false)
+
+  name            String?
   gender          String?       // 소셜 로그인에서 제공되지 않을 수 있음
   age             Int?          // 소셜 로그인에서 제공되지 않을 수 있음
   hashed_password String?       // 소셜 로그인만 사용하는 경우 null 가능
+  
   profile_image   String?
   bio             String?
   is_verified     Boolean       @default(false)
