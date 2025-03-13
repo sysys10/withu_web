@@ -24,7 +24,7 @@ export default function AuthPage() {
         <SocialLogin />
       </div>
 
-      <p className='mt-8 text-sm text-gray-500'>© {new Date().getFullYear()} WithU. All rights reserved.</p>
+      <p className='pt-8 text-sm text-gray-500'>© {new Date().getFullYear()} WithU. All rights reserved.</p>
     </div>
   )
 }
