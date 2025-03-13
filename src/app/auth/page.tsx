@@ -4,7 +4,7 @@ import BackIcons from '@/components/common/BackIcons'
 
 export default function AuthPage() {
   return (
-    <div className='flex flex-col w-full items-center justify-center px-4 max-w-lg mx-auto relative'>
+    <div className='flex flex-col w-full items-center justify-center px-4 pt-20 max-w-lg mx-auto relative'>
       <div className='absolute top-4 right-4'>
         <BackIcons />
       </div>
