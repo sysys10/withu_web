@@ -78,9 +78,9 @@ function HomeRecommendsCardItem({
   tags: string[]
 }) {
   return (
-    <div className='w-full h-32 flex gap-4 p-2 border border-gray-200 rounded-lg'>
-      {/* 이미지 대신 회색 박스로 임시 대체 */}
-      <div className='h-full aspect-square rounded-lg bg-gray-500'></div>
+    <div className='w-full h-24 flex gap-4 px-2 border border-gray-200 rounded-lg'>
+
+      <div className='h-full aspect-square rounded-md bg-gray-400'></div>
       <div className='flex-1 h-full flex flex-col justify-between py-2'>
         <div>
           <h3 className='font-bold text-lg'>{name}</h3>
