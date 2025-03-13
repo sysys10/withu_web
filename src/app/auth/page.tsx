@@ -9,7 +9,7 @@ export default function AuthPage() {
         <BackIcons />
       </div>
 
-      <div className='flex flex-col items-center gap-6 w-full max-w-md bg-white p-8 rounded-xl'>
+      <div className='flex flex-col items-center gap-6 w-full max-w-md bg-white p-4 rounded-xl'>
         <div className='mb-4'>
           <h1 className='text-5xl font-bold font-caveat text-blue-400'>WithU</h1>
         </div>
