@@ -1,13 +1,13 @@
 type LoginFormValues = {
-  id: string
+  email: string
   password: string
 }
 
 type RegisterFormValues = {
-  id: string
+  email: string
   password: string
   passwordCheck: string
-  email: string
+  name: string
 }
 
 export type { LoginFormValues, RegisterFormValues }

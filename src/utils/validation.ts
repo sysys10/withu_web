@@ -1,9 +1,4 @@
-type RegisterFormValues = {
-  id: string
-  password: string
-  passwordCheck: string
-  email: string
-}
+import { LoginFormValues, RegisterFormValues } from '@/types'
 
 type RegisterFormErrors = {
   [K in keyof RegisterFormValues]?: string
@@ -11,13 +6,6 @@ type RegisterFormErrors = {
 
 export function RegisterValidation(values: RegisterFormValues): RegisterFormErrors {
   const errors: RegisterFormErrors = {}
-
-  // ID 검증
-  if (values.id?.length < 4) {
-    errors.id = '아이디는 최소 4자 이상입니다.'
-  } else if (!/^[a-zA-Z0-9_]+$/.test(values.id)) {
-    errors.id = '아이디는 영문, 숫자, 언더스코어(_)만 사용 가능합니다.'
-  }
 
   // 비밀번호 검증
   if (values.password?.length < 8) {
@@ -37,13 +25,11 @@ export function RegisterValidation(values: RegisterFormValues): RegisterFormErro
   if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = '입력된 이메일이 유효하지 않습니다.'
   }
+  if (!values.name) {
+    errors.name = '이름을 입력해주세요.'
+  }
 
   return errors
-}
-
-type LoginFormValues = {
-  id: string
-  password: string
 }
 
 type LoginFormErrors = {
@@ -53,15 +39,10 @@ type LoginFormErrors = {
 export function LoginValidation(values: LoginFormValues): LoginFormErrors {
   const errors: LoginFormErrors = {}
 
-  // ID 검증
-  if (!values.id) {
-    errors.id = '아이디를 입력해주세요.'
-  } else if (values.id?.length < 4) {
-    errors.id = '아이디는 최소 4자 이상입니다.'
-  } else if (!/^[a-zA-Z0-9_]+$/.test(values.id)) {
-    errors.id = '아이디는 영문, 숫자, 언더스코어(_)만 사용 가능합니다.'
+  // 이메일 검증
+  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = '입력된 이메일이 유효하지 않습니다.'
   }
-
   // 비밀번호 검증
   if (!values.password) {
     errors.password = '비밀번호를 입력해주세요.'

@@ -1,8 +1,7 @@
 'use client'
 
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
-// useForm 타입 정의
 type FormErrors<T> = {
   [K in keyof T]?: string
 }
@@ -28,10 +27,17 @@ function useForm<T extends Record<string, any>>({ initialValues, onSubmit, valid
     setErrors(prev => ({ ...prev, [name]: validate(values)[name] }))
   }
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    await new Promise(r => setTimeout(r, 1000))
-    await onSubmit(values)
+    if (
+      Object.values(errors).every(error => error === undefined) &&
+      Object.values(values).every(value => value !== '')
+    ) {
+      console.log('submit')
+      onSubmit(values)
+    } else {
+      setErrors(prev => ({ ...prev, ...validate(values) }))
+    }
   }
 
   return {

@@ -16,7 +16,7 @@ export default function LoginForm() {
 
   const { values, errors, handleChange, handleSubmit } = useForm<LoginFormValues>({
     initialValues: {
-      id: '',
+      email: '',
       password: ''
     },
     onSubmit: (values: LoginFormValues) => {
@@ -34,13 +34,13 @@ export default function LoginForm() {
         className='w-full flex flex-col gap-2'>
         <div>
           <Input
-            placeholder='아이디'
-            name='id'
-            value={values.id}
+            placeholder='이메일'
+            name='email'
+            value={values.email}
             onChange={handleChange}
-            className={errors.id ? 'border-red-500' : ''}
+            className={errors.email ? 'border-red-500' : ''}
           />
-          {errors.id && <p className='mt-1 text-sm text-red-500'>{errors.id}</p>}
+          {errors.email && <p className='mt-1 text-sm text-red-500'>{errors.email}</p>}
         </div>
 
         <div>

@@ -6,7 +6,6 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
   relationMode = "prisma"
-
 }
 
 enum AuthProvider {
@@ -19,14 +18,13 @@ enum AuthProvider {
 
 model User {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  user_id         String?       @unique
-  email           String?       @unique  // 소셜 로그인 시 이메일이 제공되지 않을 수도 있음
+  email           String        @unique  // 이메일을 필수로 변경
+  hashed_password String        // 비밀번호를 필수로 변경
   isComplete      Boolean       @default(false)
-
+  
   name            String?
-  gender          String?       // 소셜 로그인에서 제공되지 않을 수 있음
-  age             Int?          // 소셜 로그인에서 제공되지 않을 수 있음
-  hashed_password String?       // 소셜 로그인만 사용하는 경우 null 가능
+  gender          String?
+  age             Int?
   
   profile_image   String?
   bio             String?
@@ -56,7 +54,6 @@ model SocialConnection {
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
-  // @@unique([provider, provider_user_id])
   @@index([user_id])
 }
 
@@ -65,9 +62,9 @@ model AuthToken {
   user_id         String        @db.ObjectId
   user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   refresh_token   String        @unique
-  access_token    String?       // 필요한 경우 access token도 저장 가능
-  device_info     String?       // 기기 정보 (선택사항)
-  ip_address      String?       // 로그인 IP (선택사항)
+  access_token    String?
+  device_info     String?
+  ip_address      String?
   expires_at      DateTime
   is_revoked      Boolean       @default(false)
   created_at      DateTime      @default(now())
@@ -76,6 +73,7 @@ model AuthToken {
   @@index([user_id, refresh_token])
 }
 
+// 나머지 모델은 동일하게 유지
 model DateCourse {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   name            String
@@ -84,9 +82,9 @@ model DateCourse {
   creator         User          @relation("CreatedCourses", fields: [creator_id], references: [id])
   thumbnail       String
   tags            String[]
-  price           Int           // 예상 비용
-  total_time      Int?          // 총 소요시간(분)
-  total_distance  Int?          // 총 이동거리(미터)
+  price           Int
+  total_time      Int?
+  total_distance  Int?
   is_public       Boolean       @default(true)
   view_count      Int           @default(0)
   like_count      Int           @default(0)
@@ -94,7 +92,6 @@ model DateCourse {
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
-  // 관계
   places          CoursePlaces[]
   saved_by        SavedCourse[]
   reviews         Review[]
@@ -120,7 +117,6 @@ model Place {
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
-  // 관계
   course_places   CoursePlaces[]
 }
 
@@ -130,15 +126,14 @@ model CoursePlaces {
   course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
   place_id        String        @db.ObjectId
   place           Place         @relation(fields: [place_id], references: [id])
-  visit_order     Int           // 방문 순서
-  recommended_time Int?         // 추천 체류 시간(분)
-  tips            String?       // 장소 이용 팁
+  visit_order     Int
+  recommended_time Int?
+  tips            String?
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
   @@unique([course_id, visit_order])
 }
-
 
 model SavedCourse {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
@@ -157,7 +152,7 @@ model Review {
   course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
   user_id         String        @db.ObjectId
   user            User          @relation(fields: [user_id], references: [id])
-  rating          Int           // 1-5 평점
+  rating          Int
   comment         String?
   visited_date    DateTime?
   images          ReviewImage[]
