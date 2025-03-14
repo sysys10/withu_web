@@ -1,18 +1,39 @@
+// src/store/useAuthStore.ts
 import { WithuUser } from '@/types/auth.type'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-interface AuthStore {
+interface AuthState {
   user: WithuUser | null
-  setUser: (user: WithuUser) => void
+  accessToken: string | null
+  isAuthenticated: boolean
+  setUser: (user: WithuUser | null) => void
+  setAccessToken: (token: string | null) => void
+  logout: () => void
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState>()(
   persist(
     set => ({
       user: null,
-      setUser: (user: WithuUser) => set({ user })
+      accessToken: null,
+      isAuthenticated: false,
+      setUser: user =>
+        set({
+          user,
+          isAuthenticated: !!user
+        }),
+      setAccessToken: accessToken => set({ accessToken }),
+      logout: () =>
+        set({
+          user: null,
+          accessToken: null,
+          isAuthenticated: false
+        })
     }),
-    { name: 'auth', storage: createJSONStorage(() => localStorage) }
+    {
+      name: 'withU-auth-storage',
+      storage: createJSONStorage(() => localStorage)
+    }
   )
 )
