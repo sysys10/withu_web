@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <div className='pt-12'>
       <TopBar />
-      <main className='pt-2 pb-12 px-4'>
+      <main className='pt-6 pb-12'>
         <div className='mb-6'>
           <HomeCarousel />
         </div>
