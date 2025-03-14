@@ -11,7 +11,7 @@ export function Button({ children, size, className, ...props }: ButtonProps) {
   }
   return (
     <button
-      className={sizeStyle[size] + 'h-12 w-full py-3 bg-black text-white rounded-md p-2' + className}
+      className={`h-12 py-3 bg-black text-white rounded-md p-2 ${sizeStyle[size]} ${className}`}
       {...props}>
       {children}
     </button>

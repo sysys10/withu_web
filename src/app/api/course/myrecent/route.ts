@@ -1,17 +1,18 @@
 import { prisma } from '@/lib/prisma'
-import { AuthenticatedRequest } from '@/middleware/auth'
+import { AuthenticatedRequest, withAuth } from '@/middleware/auth'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: AuthenticatedRequest) {
-  if (!req.user?.userId) {
-    return NextResponse.json({ error: '인증 토큰이 없습니다. 로그인이 필요합니다.' }, { status: 401 })
-  }
-
-  console.log(req.user)
+async function handler(req: AuthenticatedRequest) {
   try {
+    const userId = req.user?.userId
+
+    if (!userId) {
+      return NextResponse.json({ error: '인증이 필요합니다.' }, { status: 401 })
+    }
+
     const myRecentCourses = await prisma.dateCourse.findMany({
       where: {
-        creator_id: req.user?.userId
+        creator_id: userId
       },
       orderBy: {
         created_at: 'desc'
@@ -25,3 +26,5 @@ export async function GET(req: AuthenticatedRequest) {
     return NextResponse.json({ error: '코스 조회 중 오류가 발생했습니다.' }, { status: 500 })
   }
 }
+
+export const GET = withAuth(handler)

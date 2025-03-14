@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <>
       <TopBar />
-      <main className='pt-2'>
+      <main className='pt-2 pb-12'>
         <div>
           <HomeCarousel />
         </div>

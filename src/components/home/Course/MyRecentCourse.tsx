@@ -1,10 +1,13 @@
 'use client'
 
 import { axiosPrivate } from '@/api/axiosInstance'
+import { useAuthStore } from '@/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
+import { PlusIcon } from 'lucide-react'
 
 import Section from '@/components/common/Section'
 import WithRowCard from '@/components/common/WithUCard'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const getMyRecentCourse = async () => {
@@ -25,6 +28,7 @@ function useMyRecentCourse() {
 export default function MyRecentCourse({ name }: { name: string }) {
   const { data, isLoading, error } = useMyRecentCourse()
 
+  const user = useAuthStore(state => state.user)
   return (
     <Section title={name}>
       <div className='space-y-4'>
@@ -38,7 +42,12 @@ export default function MyRecentCourse({ name }: { name: string }) {
             />
           ))
         ) : (
-          <div className='text-center text-gray-500'>데이터가 없습니다.</div>
+          <div className='text-center text-gray-500'>
+            내 데이트 코스를 추가해보세요.
+            <Button size='sm'>
+              <PlusIcon />
+            </Button>
+          </div>
         )}
       </div>
     </Section>

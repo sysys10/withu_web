@@ -1,3 +1,5 @@
+import { User } from '@prisma/client'
+
 type LoginFormValues = {
   email: string
   password: string
@@ -10,4 +12,6 @@ type RegisterFormValues = {
   name: string
 }
 
-export type { LoginFormValues, RegisterFormValues }
+type WithuUser = Pick<User, 'id' | 'email' | 'name'>
+
+export type { LoginFormValues, RegisterFormValues, WithuUser }

@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   try {
     const recommendCourse = await prisma.dateCourse.findMany({
       where: {
-        is_recommend: true
+        is_public: true
       },
       orderBy: {
         created_at: 'desc'
