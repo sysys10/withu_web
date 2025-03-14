@@ -3,14 +3,14 @@ export default function WithRowCard({
   image,
   address,
   distance,
-  cost,
+  price,
   tags
 }: {
   name: string
   image: string
   address: string
   distance: number
-  cost: number
+  price: number
   tags: string[]
 }) {
   return (
@@ -24,7 +24,7 @@ export default function WithRowCard({
         <div>
           <div className='flex justify-between text-sm'>
             <span>{distance}km</span>
-            <span>{cost.toLocaleString()}원</span>
+            <span>{price.toLocaleString()}원</span>
           </div>
           <div className='flex gap-1 mt-1'>
             {tags.map((tag, index) => (
