@@ -1,9 +1,11 @@
 'use client'
-import React from 'react'
+
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import React from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { useRouter } from 'next/navigation'
+
 const carouselItems = [
   {
     image: 'https://ugc-images.catchtable.co.kr/admin/marketing/banner/images/9b46a65717a646b08965d01a371dd448',
@@ -39,7 +41,6 @@ export default function HomeCarousel() {
           infiniteLoop={true}
           useKeyboardArrows={true}
           swipeable={true}
-          autoPlay={true}
           interval={2000}
           emulateTouch={true}
           centerMode={true}

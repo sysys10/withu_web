@@ -6,12 +6,12 @@ export default async function SearchPage({ params }: SearchPageProps) {
   const { tag } = await params
   return (
     <div className='w-full min-h-screen bg-white'>
-      <SearchPageHeader />
+      <SearchPageHeader tag={tag} />
     </div>
   )
 }
 
-function SearchPageHeader() {
+function SearchPageHeader({ tag }: { tag: string }) {
   return (
     <div className='px-4 py-5 font-sans'>
       <div className='mb-4'>
