@@ -1,9 +1,15 @@
-import type {NextConfig} from 'next'
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['ugc-images.catchtable.co.kr', 'd2ba33ltwyhxsm.cloudfront.net']
+    domains: [
+      'i.namu.wiki',
+      'via.placeholder.com',
+      'ugc-images.catchtable.co.kr',
+      'images.unsplash.com',
+      'd2ba33ltwyhxsm.cloudfront.net'
+    ]
   },
   webpack: config => {
     config.module.rules.push({

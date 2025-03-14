@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ArrowLeftIcon, BookmarkIcon, HeartIcon, MapPinIcon, ShareIcon, StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { use, useState } from 'react'
 
 import BackIcons from '@/components/common/BackIcons'
 import { Button } from '@/components/ui/button'
@@ -16,9 +16,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 // src/app/course/[id]/page.tsx
 
 interface CourseDetailProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // Mock function to get course details
@@ -85,9 +85,13 @@ export default function CourseDetailPage({ params }: CourseDetailProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
 
+  // React.use() 사용하여 params Promise 언래핑
+  const unwrappedParams = use(params)
+  const courseId = unwrappedParams.id
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['course', params.id],
-    queryFn: () => getCourseDetails(params.id),
+    queryKey: ['course', courseId],
+    queryFn: () => getCourseDetails(courseId),
     select: data => data.course
   })
 

@@ -9,10 +9,18 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import CourseCard, { CourseCardProps } from '@/components/common/CourseCard'
 import Section from '@/components/common/Section'
-import WithRowCard from '@/components/common/WithUCard'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+
+// src/components/home/Course/MyRecentCourse.tsx
+
+// src/components/home/Course/MyRecentCourse.tsx
+
+// src/components/home/Course/MyRecentCourse.tsx
+
+// src/components/home/Course/MyRecentCourse.tsx
 
 // src/components/home/Course/MyRecentCourse.tsx
 
@@ -77,19 +85,19 @@ export default function MyRecentCourse({ name }: { name: string }) {
             />
           ))
         ) : data?.length > 0 ? (
-          data.map((item: any) => (
-            <WithRowCard
+          data.map((item: CourseCardProps) => (
+            <CourseCard
               key={item.id}
               {...item}
             />
           ))
         ) : (
           <div className='p-6 border border-gray-200 rounded-lg text-center'>
-            <p className='text-gray-600 mb-4'>아직 데이트 코스가 없어요. 새로운 코스를 추가해보세요!</p>
+            <p className='text-gray-600 mb-4'>아직 기록된 데이트 코스가 없어요. 기록해보세요!</p>
             <Link href='/add'>
               <Button
                 size='lg'
-                className='gap-2'>
+                className='gap-2 flex items-center justify-center'>
                 <PlusIcon size={18} />
                 <span>새 데이트 코스 만들기</span>
               </Button>

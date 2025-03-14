@@ -299,7 +299,8 @@ db.DateCourse.insertOne({
   name: '한강 데이트 코스',
   description: '한강에서 즐기는 로맨틱한 데이트',
   creator_id: user1Id,
-  thumbnail: 'https://images.unsplash.com/photo-1522686681175-5f6384129000?q=80&w=3348&auto=format&fit=crop',
+  thumbnail:
+    'https://i.namu.wiki/i/tQCCtBkamst95Zc0NFm7ceRPz8W3rCbRDpQbQKty0ai0_oyJTo4kwIVfMYDK3feslrrgyLChDlLMMPpYAHs2XQ.webp',
   tags: ['공원', '야외', '한강', '산책'],
   price: 20000,
   total_time: 180,
