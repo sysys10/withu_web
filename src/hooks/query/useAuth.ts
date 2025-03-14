@@ -23,6 +23,7 @@ function useLogin() {
     mutationFn: loginApi,
     onSuccess: (data: LoginResponse) => {
       setAxiosHeader(data.accessToken)
+
       router.push('/home')
     },
     onError: (error: any) => {

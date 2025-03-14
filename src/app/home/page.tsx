@@ -1,8 +1,10 @@
-import HomeRecommendsCard from '@/components/home/HomeCard'
+import React from 'react'
+
+import MyRecentCourse from '@/components/home/Course/MyRecentCourse'
+import RecommendCourse from '@/components/home/Course/RecommendCourse'
 import HomeCarousel from '@/components/home/HomeCarousel'
 import HomeCategories from '@/components/home/HomeCategories'
 import TopBar from '@/components/layout/TopBar'
-import React from 'react'
 
 export default function HomePage() {
   return (
@@ -16,16 +18,10 @@ export default function HomePage() {
           <HomeCategories />
         </div>
         <div className='mt-6'>
-          <HomeRecommendsCard
-            name='오늘의 추천'
-            type='today'
-          />
+          <RecommendCourse name='오늘의 추천' />
         </div>
         <div className='mt-6'>
-          <HomeRecommendsCard
-            name='최근 데이트'
-            type='recent'
-          />
+          <MyRecentCourse name='최근 데이트' />
         </div>
       </main>
     </>

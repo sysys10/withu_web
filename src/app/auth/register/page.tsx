@@ -43,6 +43,19 @@ export default function RegisterPage() {
         className='flex flex-col pt-10 w-full gap-4'>
         <div className='space-y-3'>
           <div>
+            <Label htmlFor='name'>이름</Label>
+            <Input
+              id='name'
+              placeholder='이름'
+              name='name'
+              onBlur={onBlur}
+              value={values.name}
+              onChange={handleFormChange}
+              className={errors.name ? 'border-red-500' : ''}
+            />
+            {errors.name && <p className='mt-1 text-sm text-red-500'>{errors.name}</p>}
+          </div>
+          <div>
             <Label htmlFor='email'>이메일</Label>
             <Input
               id='email'
@@ -82,19 +95,6 @@ export default function RegisterPage() {
             />
             {errors.passwordCheck && <p className='mt-1 text-sm text-red-500'>{errors.passwordCheck}</p>}
           </div>
-        </div>
-        <div>
-          <Label htmlFor='name'>이름</Label>
-          <Input
-            id='name'
-            placeholder='이름'
-            name='name'
-            onBlur={onBlur}
-            value={values.name}
-            onChange={handleFormChange}
-            className={errors.name ? 'border-red-500' : ''}
-          />
-          {errors.name && <p className='mt-1 text-sm text-red-500'>{errors.name}</p>}
         </div>
         //약관동의
         {serverError && <div className='mt-4 p-3 bg-red-100 text-red-600 rounded-md'>{serverError}</div>}

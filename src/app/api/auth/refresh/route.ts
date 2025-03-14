@@ -49,7 +49,6 @@ export async function POST() {
         accessToken,
         user: {
           id: tokenRecord.user.id,
-          user_id: tokenRecord.user.user_id,
           email: tokenRecord.user.email,
           name: tokenRecord.user.name
         }
