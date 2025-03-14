@@ -56,11 +56,19 @@ export function LoginValidation(values: LoginFormValues): LoginFormErrors {
   // ID 검증
   if (!values.id) {
     errors.id = '아이디를 입력해주세요.'
+  } else if (values.id?.length < 4) {
+    errors.id = '아이디는 최소 4자 이상입니다.'
+  } else if (!/^[a-zA-Z0-9_]+$/.test(values.id)) {
+    errors.id = '아이디는 영문, 숫자, 언더스코어(_)만 사용 가능합니다.'
   }
 
   // 비밀번호 검증
   if (!values.password) {
     errors.password = '비밀번호를 입력해주세요.'
+  } else if (values.password?.length < 8) {
+    errors.password = '8자 이상의 패스워드를 사용해야 합니다.'
+  } else if (!/^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-z\d@$!%*?&]{8,}$/.test(values.password)) {
+    errors.password = '비밀번호는 문자, 숫자, 특수문자를 포함해야 합니다.'
   }
 
   return errors

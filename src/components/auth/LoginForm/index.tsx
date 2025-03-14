@@ -1,48 +1,27 @@
 'use client'
 
+import { LoginFormValues } from '@/types/auth.type'
+import Link from 'next/link'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import useForm from '@/hooks/useForm'
-import { LoginValidation } from '@/utils/validation'
-import axios from 'axios'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
-type LoginFormValues = {
-  id: string
-  password: string
-}
+import { useLogin } from '@/hooks/query/useAuth'
+import useForm from '@/hooks/useForm'
+
+import { LoginValidation } from '@/utils/validation'
 
 export default function LoginForm() {
-  const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
+  const { login, isPending, serverError } = useLogin()
 
-  const onSubmit = async (values: LoginFormValues): Promise<void> => {
-    try {
-      setServerError(null)
-
-      const response = await axios.post('/api/auth/login', {
-        user_id: values.id,
-        password: values.password
-      })
-
-      console.log('로그인 시도:', values, response)
-
-      // 로그인 성공 시 홈 페이지로 이동
-      router.push('/home')
-    } catch (error) {
-      console.error('로그인 오류:', error)
-      setServerError('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.')
-    }
-  }
-
-  const { values, errors, isLoading, handleChange, handleSubmit } = useForm<LoginFormValues>({
+  const { values, errors, handleChange, handleSubmit } = useForm<LoginFormValues>({
     initialValues: {
       id: '',
       password: ''
     },
-    onSubmit,
+    onSubmit: (values: LoginFormValues) => {
+      login(values)
+    },
     validate: LoginValidation
   })
 
@@ -79,8 +58,8 @@ export default function LoginForm() {
         <Button
           type='submit'
           size='lg'
-          disabled={isLoading}>
-          {isLoading ? '로그인 중...' : '로그인'}
+          disabled={isPending}>
+          {isPending ? '로그인 중...' : '로그인'}
         </Button>
       </form>
 

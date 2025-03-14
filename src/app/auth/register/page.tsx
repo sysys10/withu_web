@@ -1,52 +1,31 @@
 'use client'
+
+import { RegisterFormValues } from '@/types'
+import { ChangeEvent } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import PasswordInput from '@/components/ui/passwordInput'
-import useForm from '@/hooks/useForm'
-import { RegisterValidation } from '@/utils/validation'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import { useState, ChangeEvent } from 'react'
 
-type RegisterFormValues = {
-  id: string
-  password: string
-  passwordCheck: string
-  email: string
-}
+import { useRegister } from '@/hooks/query'
+import useForm from '@/hooks/useForm'
+
+import { RegisterValidation } from '@/utils/validation'
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
+  const { register, isPending, serverError } = useRegister()
 
-  const onSubmit = async (values: RegisterFormValues): Promise<void> => {
-    try {
-      setServerError(null)
-      const response = await axios.post('/api/auth/register', {
-        user_id: values.id,
-        password: values.password,
-        email: values.email
-      })
-
-      console.log('회원가입 성공:', values, response)
-
-      // 회원가입 성공 시 로그인 페이지로 이동
-      router.push('/auth/login')
-    } catch (error) {
-      console.error('회원가입 오류:', error)
-      setServerError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
-    }
-  }
-
-  const { values, errors, isLoading, handleChange, handleSubmit, setValues, onBlur } = useForm<RegisterFormValues>({
+  const { values, errors, handleChange, handleSubmit, setValues, onBlur } = useForm<RegisterFormValues>({
     initialValues: {
       id: '',
       password: '',
       passwordCheck: '',
       email: ''
     },
-    onSubmit,
+    onSubmit: (values: RegisterFormValues) => {
+      register(values)
+    },
     validate: RegisterValidation
   })
 
@@ -128,8 +107,8 @@ export default function RegisterPage() {
         <Button
           type='submit'
           size='lg'
-          disabled={isLoading}>
-          {isLoading ? '처리 중...' : '회원가입'}
+          disabled={isPending}>
+          {isPending ? '처리 중...' : '회원가입'}
         </Button>
       </form>
     </div>

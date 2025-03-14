@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 // useForm 타입 정의
 type FormErrors<T> = {
@@ -15,12 +16,12 @@ interface UseFormProps<T> {
 function useForm<T extends Record<string, any>>({ initialValues, onSubmit, validate }: UseFormProps<T>) {
   const [values, setValues] = useState<T>(initialValues)
   const [errors, setErrors] = useState<FormErrors<T>>({})
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setValues(prev => ({ ...prev, [name]: value }))
-    // setErrors(prev => ({ ...prev, [name]: validate(values)[name] }))
+    const newValues = { ...values, [name]: value }
+    setValues(newValues)
+    setErrors(prev => ({ ...prev, [name]: validate(newValues)[name] }))
   }
   const onBlur = (event: ChangeEvent<HTMLInputElement>) => {
     const { name } = event.target
@@ -29,32 +30,13 @@ function useForm<T extends Record<string, any>>({ initialValues, onSubmit, valid
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    setIsLoading(true)
     await new Promise(r => setTimeout(r, 1000))
-    setErrors(validate(values))
+    await onSubmit(values)
   }
-
-  useEffect(() => {
-    const submitForm = async () => {
-      if (isLoading) {
-        if (Object.keys(errors).length === 0) {
-          try {
-            await onSubmit(values)
-          } catch (error) {
-            console.error('Form submission error:', error)
-          }
-        }
-        setIsLoading(false)
-      }
-    }
-
-    submitForm()
-  }, [errors, isLoading, onSubmit, values])
 
   return {
     values,
     errors,
-    isLoading,
     handleChange,
     handleSubmit,
     onBlur,
