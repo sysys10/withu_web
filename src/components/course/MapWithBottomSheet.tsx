@@ -60,11 +60,26 @@ const MapWithBottomSheet = ({ courses, initialCenter = { lat: 37.5665, lng: 126.
     setBottomSheetHeight(bottomSheetHeight === 200 ? 400 : 200)
   }
 
+  // Custom handlers for start of drag to prevent map interaction
+  const handleDragStart = () => {
+    // Add a class to the map container to disable pointer events during drag
+    if (mapRef.current) {
+      mapRef.current.classList.add('pointer-events-none')
+    }
+  }
+
+  const handleDragEnd = () => {
+    // Re-enable pointer events on the map when drag ends
+    if (mapRef.current) {
+      mapRef.current.classList.remove('pointer-events-none')
+    }
+  }
+
   return (
     <div className='relative h-screen w-full overflow-hidden'>
       <div
         ref={mapRef}
-        className='w-full h-full bg-gray-100 relative'
+        className='w-full h-full bg-gray-100 relative transition-[pointer-events]'
         style={{ zIndex: 1 }}>
         {!mapLoaded ? (
           <div className='flex items-center justify-center h-full'>
@@ -88,7 +103,7 @@ const MapWithBottomSheet = ({ courses, initialCenter = { lat: 37.5665, lng: 126.
                       <Image
                         src={
                           course.thumbnail ||
-                          'http://localhost:3000/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1541167760496-1628856ab772%3Fq%3D80%26w%3D3337%26auto%3Dformat%26fit%3Dcrop&w=3840&q=75'
+                          'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=3337&auto=format&fit=crop&w=3840&q=75'
                         }
                         alt={course.name}
                         fill
@@ -116,8 +131,27 @@ const MapWithBottomSheet = ({ courses, initialCenter = { lat: 37.5665, lng: 126.
           snapPoints={[20, 50, 80]}
           showBackdrop={false}
           animated={true}
-          animationDuration={300}>
-          <div className='p-4 border-b border-gray-200'>
+          animationDuration={300}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          containerStyle={{
+            // Add z-index to ensure sheet is above map
+            zIndex: 10,
+            // Make sure to stop propagation of all pointer events
+            touchAction: 'none'
+          }}
+          handleStyle={{
+            // Make handle more obvious and grabbable
+            width: '60px',
+            height: '6px',
+            backgroundColor: '#CBD5E0',
+            cursor: 'grab'
+          }}>
+          <div
+            className='p-4 border-b border-gray-200'
+            // Prevent map from receiving events when interacting with sheet header
+            onTouchStart={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}>
             <div className='flex justify-between items-start'>
               <div className='flex-1'>
                 <h2 className='text-xl font-bold'>{selectedCourse.name}</h2>
@@ -141,7 +175,10 @@ const MapWithBottomSheet = ({ courses, initialCenter = { lat: 37.5665, lng: 126.
 
           <div
             className='p-4 overflow-y-auto'
-            style={{ height: 'calc(100% - 80px)' }}>
+            style={{ height: 'calc(100% - 80px)' }}
+            // Prevent map interaction when scrolling sheet content
+            onTouchStart={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}>
             <div className='mb-6'>
               <div className='flex items-center mb-2'>
                 <div className='flex items-center mr-4'>
