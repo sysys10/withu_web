@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BottomSheet } from 'react-webview-bottomsheet'
+
+import { BottomSheet } from '@/components/course/react-webview-bottomsheet'
 
 export default function App() {
   const [isMounted, setIsMounted] = useState(false)

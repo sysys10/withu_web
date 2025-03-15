@@ -4,7 +4,8 @@ import { ChevronDownIcon, ChevronUpIcon, ClockIcon, CreditCardIcon, MapPinIcon, 
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { BottomSheet } from 'react-webview-bottomsheet'
+
+import { BottomSheet } from './react-webview-bottomsheet'
 
 // Type definitions
 interface Place {
