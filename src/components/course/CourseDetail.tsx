@@ -251,7 +251,7 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
       </div>
 
       {/* Fixed bottom bar */}
-      <div className='fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center max-w-lg mx-auto'>
+      <div className='fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center max-w-xl mx-auto'>
         <div>
           <p className='text-sm text-gray-500'>예상 비용</p>
           <p className='text-xl font-bold'>{data.price.toLocaleString()}원</p>

@@ -1,3 +1,3 @@
 export default function AddPage() {
-  return <div>AddPage</div>
+  return <div>AddPageYeah</div>
 }
