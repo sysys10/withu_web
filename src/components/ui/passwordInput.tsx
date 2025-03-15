@@ -1,6 +1,8 @@
 'use client'
+
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { useState } from 'react'
+
 import { Input } from './input'
 
 interface PasswordInputProps extends React.ComponentProps<'input'> {

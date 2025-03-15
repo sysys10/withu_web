@@ -1,4 +1,5 @@
 'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -25,7 +26,7 @@ const BOTTOM_TAB_ITEMS = [
   {
     id: 4,
     icon: '/icons/calendar-clear',
-    href: '/mydate'
+    href: '/map'
     // nativeScreen: 'Wishlist'
   },
   {
@@ -39,7 +40,7 @@ const BOTTOM_TAB_ITEMS = [
 export default function BottomTab() {
   const pathname = usePathname()
   return (
-    <div className='fixed bg-white bottom-0 w-full max-w-lg border-t border-[#f9f9f9] h-12'>
+    <div className='fixed bg-white bottom-0 w-full max-w-xl border-t border-[#f9f9f9] h-12'>
       <div className='flex justify-between h-full items-center'>
         {BOTTOM_TAB_ITEMS.map(item => (
           <Link
