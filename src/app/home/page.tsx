@@ -17,7 +17,6 @@ export default function HomePage() {
         </div>
 
         <div className='bg-[#f5f0e6] mt-6 pb-3 mx-0.5 pt-4 px-4 rounded-xl'>
-          <h2 className='text-xl font-semibold mb-3'>데이트 카테고리</h2>
           <HomeCategories />
         </div>
 
