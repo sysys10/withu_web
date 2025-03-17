@@ -10,7 +10,7 @@ export default function AddCourseButton({ text }: { text: string }) {
 
   const handleCreateCourse = () => {
     if (isInAppWebView) {
-      alert('앱 열기')
+      alert('웹 액션 호출')
       window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'OPEN_COURSE_ADD', data: {} }))
     } else {
       try {
@@ -29,8 +29,7 @@ export default function AddCourseButton({ text }: { text: string }) {
           }
         }, 1000)
       } catch (error) {
-        console.error('앱 열기 실패:', error)
-        router.push('/course/add')
+        alert('앱 열기 실패')
       }
     }
   }
