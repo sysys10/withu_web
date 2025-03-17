@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
 import MapWithBottomSheet from '@/components/course/MapWithBottomSheet'
 import TopBar from '@/components/layout/TopBar'
 
-import { useCourseDetail, useCourses } from '@/hooks/query/useCourse'
+import { useCourseDetail } from '@/hooks/query/useCourse'
 
 // Mock data for now
 const mockCourses = [

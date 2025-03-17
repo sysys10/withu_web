@@ -11,12 +11,12 @@ const BOTTOM_TAB_ITEMS = [
     href: '/search'
     // nativeScreen: 'Search'
   },
-  // {
-  //   id: 3,
-  //   icon: '/icons/add-circle',
-  //   href: '/add'
-  //   // nativeScreen: 'Add'
-  // },
+  {
+    id: 3,
+    icon: '/icons/add-circle',
+    href: '/add/course'
+    // nativeScreen: 'Add'
+  },
   {
     id: 4,
     icon: '/icons/calendar-clear',

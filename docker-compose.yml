@@ -1,30 +1,37 @@
-version: '3'
 services:
   mongodb:
     image: mongo:latest
-    command: ['--replSet', 'rs0', '--bind_ip_all']
+    container_name: mongodb
+    command: ['--replSet', 'rs0', '--bind_ip_all', '--keyFile', '/etc/mongodb/keyfile']
     ports:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+      - ./keyfile:/etc/mongodb/keyfile
     environment:
       - MONGO_INITDB_ROOT_USERNAME=ys10
       - MONGO_INITDB_ROOT_PASSWORD=mhermes1014!
+    restart: always
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
-      interval: 10s
+      test: mongosh --eval 'db.adminCommand("ping").ok' --quiet
+      interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 40s
+      start_period: 60s
 
   mongo-init:
     image: mongo:latest
+    container_name: mongo-init
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart: on-failure
+    volumes:
+      - ./keyfile:/etc/mongodb/keyfile
     command: >
       bash -c "
-        sleep 10 &&
+        echo 'Waiting for MongoDB to be ready...' &&
+        sleep 15 &&
         mongosh --host mongodb:27017 -u ys10 -p mhermes1014! --authenticationDatabase admin --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongodb:27017\"}]})' &&
         echo 'Replica set initialized'
       "

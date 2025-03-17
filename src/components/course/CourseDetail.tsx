@@ -1,7 +1,6 @@
 'use client'
 
 import { useAuthStore } from '@/store/useAuthStore'
-import { useQuery } from '@tanstack/react-query'
 import { ArrowLeftIcon, BookmarkIcon, HeartIcon, MapPinIcon, ShareIcon, StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'

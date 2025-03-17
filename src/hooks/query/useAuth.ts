@@ -22,15 +22,11 @@ function useLogin() {
 
   const { mutate: login, isPending } = useMutation({
     mutationFn: loginApi,
-    onSuccess: (data: LoginResponse, variables, context) => {
-      // 토큰과 유저 정보 저장
+    onSuccess: (data: LoginResponse) => {
       setAccessToken(data.accessToken)
       setUser(data.user)
-
-      // 헤더에 토큰 설정
       setAxiosHeader(data.accessToken)
-
-      // 이 부분은 onSuccess 콜백을 통해 외부에서 처리할 수 있도록 함
+      router.push('/home')
     },
     onError: (error: any) => {
       setServerError(error.response?.data?.error || '로그인에 실패했습니다.')

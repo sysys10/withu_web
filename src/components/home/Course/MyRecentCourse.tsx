@@ -1,11 +1,9 @@
-// src/components/home/Course/MyRecentCourse.tsx
 'use client'
 
 import { axiosPrivate } from '@/api/axiosInstance'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -14,15 +12,9 @@ import Section from '@/components/common/Section'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
-// src/components/home/Course/MyRecentCourse.tsx
+import useIsReactNativeWebview from '@/hooks/useIsReactNativeWebView'
 
-// src/components/home/Course/MyRecentCourse.tsx
-
-// src/components/home/Course/MyRecentCourse.tsx
-
-// src/components/home/Course/MyRecentCourse.tsx
-
-// src/components/home/Course/MyRecentCourse.tsx
+import { handleCreateCourse } from '@/utils/handleMobileAction'
 
 const getMyRecentCourse = async () => {
   try {
@@ -54,9 +46,19 @@ function useMyRecentCourse() {
   return { data, isLoading, error, isAuthenticated }
 }
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void
+    }
+  }
+}
+
 export default function MyRecentCourse({ name }: { name: string }) {
   const { data, isLoading, error, isAuthenticated } = useMyRecentCourse()
   const router = useRouter()
+
+  const isInAppWebView = useIsReactNativeWebview()
 
   if (!isAuthenticated) {
     return (
@@ -94,14 +96,13 @@ export default function MyRecentCourse({ name }: { name: string }) {
         ) : (
           <div className='p-6 border border-gray-200 rounded-lg text-center'>
             <p className='text-gray-600 mb-4'>아직 기록된 데이트 코스가 없어요. 기록해보세요!</p>
-            <Link href='/add'>
-              <Button
-                size='lg'
-                className='gap-2 flex items-center justify-center'>
-                <PlusIcon size={18} />
-                <span>새 데이트 코스 만들기</span>
-              </Button>
-            </Link>
+            <Button
+              size='lg'
+              onClick={handleCreateCourse}
+              className='gap-2 flex items-center justify-center'>
+              <PlusIcon size={18} />
+              <span>새 데이트 코스 만들기</span>
+            </Button>
           </div>
         )}
       </div>
