@@ -9,6 +9,7 @@ function handleCreateCourse() {
   const router = useRouter()
 
   if (isInAppWebView) {
+    alert('앱 열기')
     window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'OPEN_COURSE_ADD', data: {} }))
   } else {
     // 3. 일반 웹 브라우저에서 실행 중인 경우
@@ -17,6 +18,8 @@ function handleCreateCourse() {
       // 앱이 설치되어 있는지 확인하는 방법은 없으므로 timeout을 사용
       const appDeepLink = 'WithU_1://course/add' // 앱의 딥링크 스키마
       const webFallback = '/course/add' // 앱이 없으면 웹페이지로
+
+      alert('앱 열기')
 
       // 딥링크를 통해 앱 열기
       window.location.href = appDeepLink
