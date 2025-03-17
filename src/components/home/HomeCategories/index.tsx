@@ -1,4 +1,4 @@
-import { HOME_CATEGORIES } from '@/components/constants/home.constants'
+import { HOME_CATEGORIES } from '@/constants/home.constants'
 
 import HomeCategoryIcon from './components/CategoryIcons'
 

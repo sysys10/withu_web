@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import MapWithBottomSheet from '@/components/course/MapWithBottomSheet'
 import TopBar from '@/components/layout/TopBar'
 
+import { useCourseDetail, useCourses } from '@/hooks/query/useCourse'
+
 // Mock data for now
 const mockCourses = [
   {
@@ -85,25 +87,9 @@ const mockCourses = [
   }
 ]
 
-export default function MapPage() {
-  const [courses, setCourses] = useState(mockCourses)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        setCourses(mockCourses)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching courses:', error)
-        setLoading(false)
-      }
-    }
-
-    fetchCourses()
-  }, [])
-
-  if (loading) {
+export default function MapPage({ id }: { id: string }) {
+  const { course, isLoading } = useCourseDetail({ id })
+  if (isLoading) {
     return (
       <div className='flex items-center justify-center h-screen'>
         <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500'></div>
@@ -115,7 +101,7 @@ export default function MapPage() {
     <div className='relative w-full h-screen overflow-hidden'>
       <TopBar />
       <div className='pt-12 h-full w-full'>
-        <MapWithBottomSheet courses={courses[1]} />
+        <MapWithBottomSheet course={course!} />
       </div>
     </div>
   )

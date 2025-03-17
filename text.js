@@ -24,6 +24,7 @@ const place4Id = ObjectId() // 한강공원 반포지구
 const place5Id = ObjectId() // 남산서울타워
 const place6Id = ObjectId() // 코엑스몰
 
+const course0Id = ObjectId() // 한양대 데이트 코스
 const course1Id = ObjectId() // 강남 데이트 코스
 const course2Id = ObjectId() // 문화 데이트 코스
 const course3Id = ObjectId() // 한강 데이트 코스
@@ -256,6 +257,26 @@ db.Place.insertOne({
 })
 
 // 3. 데이트 코스 데이터 삽입
+
+db.DateCourse.insertOne({
+  _id: course0Id,
+  name: '한양대 데이트 코스',
+  description: '한양대에서 즐기는 데이트 코스',
+  creator_id: user1Id,
+  thumbnail: 'https://images.unsplash.com/photo-1553969923-bbf91ae9122e?q=80&w=3269&auto=format&fit=crop',
+  tags: ['카페', '쇼핑', '실내', '강남'],
+  price: 50000,
+  total_time: 240,
+  total_distance: 3,
+  is_public: true,
+  view_count: 120,
+  like_count: 45,
+  rating: 4.8,
+  created_at: new Date(),
+  updated_at: new Date(),
+  is_recommend: true
+})
+
 db.DateCourse.insertOne({
   _id: course1Id,
   name: '강남 데이트 코스',

@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function TopBar() {
   return (
-    <header className='h-12 px-2 fixed max-w-lg mx-auto top-0 right-0 left-0 bg-white z-50'>
+    <header className='h-14 px-2 fixed max-w-xl mx-auto top-0 right-0 left-0 bg-white z-50'>
       <nav className='flex h-full items-center justify-between'>
         <Link href='/'>
           <Image

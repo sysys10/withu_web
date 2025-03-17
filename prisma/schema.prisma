@@ -86,14 +86,11 @@ model DateCourse {
   total_time      Int?
   total_distance  Int?
   is_public       Boolean       @default(true)
-  view_count      Int           @default(0)
   like_count      Int           @default(0)
   rating          Float         @default(0)
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   is_recommend    Boolean       @default(false)
-
-
 
   places          CoursePlaces[]
   saved_by        SavedCourse[]

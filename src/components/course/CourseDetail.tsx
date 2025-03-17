@@ -11,74 +11,15 @@ import BackIcons from '@/components/common/BackIcons'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
-// Mock function to get course details
-const getCourseDetails = async (id: string) => {
-  try {
-    // In a real app, you would fetch from API
-    // const response = await axiosPublic.get(`/api/course/${id}`)
-    // return response.data
+import { useCourseDetail } from '@/hooks/query/useCourse'
 
-    // For now, return mock data
-    return {
-      course: {
-        id,
-        name: '한강 데이트 코스',
-        description:
-          '서울의 중심을 가로지르는 한강에서 즐기는 로맨틱한 데이트 코스입니다. 자전거 타기, 피크닉, 유람선 등 다양한 활동을 즐길 수 있어요.',
-        image: 'https://via.placeholder.com/600x400',
-        thumbnail: 'https://via.placeholder.com/600x400',
-        address: '서울특별시 영등포구 여의도동',
-        distance: 2.5,
-        price: 50000,
-        rating: 4.5,
-        review_count: 120,
-        tags: ['실외', '자연', '로맨틱', '액티비티'],
-        places: [
-          {
-            id: 'p1',
-            name: '여의도 한강공원',
-            address: '서울 영등포구 여의도동',
-            description: '아름다운 경치와 다양한 활동을 즐길 수 있는 공간',
-            image: 'https://via.placeholder.com/300x200'
-          },
-          {
-            id: 'p2',
-            name: '더 리버 카페',
-            address: '서울 영등포구 여의도동 63빌딩 내',
-            description: '한강이 내려다보이는 아늑한 카페',
-            image: 'https://via.placeholder.com/300x200'
-          },
-          {
-            id: 'p3',
-            name: '한강 유람선',
-            address: '서울 영등포구 여의도동 선착장',
-            description: '낭만적인 한강 유람선 투어',
-            image: 'https://via.placeholder.com/300x200'
-          }
-        ],
-        creator: {
-          id: 'user1',
-          name: '김데이트',
-          image: 'https://via.placeholder.com/50x50'
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching course details:', error)
-    throw error
-  }
-}
 export default function CourseDetail({ courseId }: { courseId: string }) {
   const router = useRouter()
   const isAuthenticated = useAuthStore(state => state.isAuthenticated)
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['course', courseId],
-    queryFn: () => getCourseDetails(courseId),
-    select: data => data.course
-  })
+  const { course, isLoading } = useCourseDetail({ id: courseId })
 
   if (isLoading) {
     return (
@@ -100,36 +41,12 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
     )
   }
 
-  if (error || !data) {
-    return (
-      <div className='p-4 text-center'>
-        <div className='flex items-center mb-4'>
-          <button
-            onClick={() => router.back()}
-            className='p-2'>
-            <ArrowLeftIcon size={24} />
-          </button>
-        </div>
-        <div className='p-8 border border-gray-200 rounded-lg'>
-          <h2 className='text-xl font-bold mb-2'>오류가 발생했습니다</h2>
-          <p className='text-gray-600 mb-4'>코스 정보를 불러올 수 없습니다.</p>
-          <Button
-            size='md'
-            onClick={() => router.back()}>
-            뒤로 가기
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className='pb-20'>
-      {/* Header Image */}
       <div className='relative h-72 w-full'>
         <Image
-          src={data.image}
-          alt={data.name}
+          src={course?.thumbnail || ''}
+          alt={course?.name || ''}
           fill
           className='object-cover'
         />
@@ -143,7 +60,7 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
       {/* Course Info */}
       <div className='p-4'>
         <div className='flex justify-between items-start mb-2'>
-          <h1 className='text-2xl font-bold'>{data.name}</h1>
+          <h1 className='text-2xl font-bold'>{course?.name}</h1>
           <div className='flex gap-2'>
             <button
               onClick={() => setIsLiked(!isLiked)}
@@ -175,17 +92,17 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
             size={18}
             className='text-yellow-500 fill-yellow-500'
           />
-          <span className='font-medium'>{data.rating}</span>
-          <span className='text-gray-500'>({data.review_count})</span>
+          <span className='font-medium'>{course?.rating}</span>
+          <span className='text-gray-500'>({course?.review_count})</span>
         </div>
 
         <div className='flex items-center gap-1 mb-3 text-gray-600'>
           <MapPinIcon size={16} />
-          <span>{data.address}</span>
+          <span>{course?.places[0].address}</span>
         </div>
 
         <div className='flex flex-wrap gap-2 mb-4'>
-          {data.tags.map((tag, index) => (
+          {course?.tags.map((tag, index) => (
             <span
               key={index}
               className='px-3 py-1 bg-gray-100 rounded-full text-sm'>
@@ -196,7 +113,7 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
 
         <div className='mb-6'>
           <h2 className='text-lg font-bold mb-2'>코스 소개</h2>
-          <p className='text-gray-700 whitespace-pre-line'>{data.description}</p>
+          <p className='text-gray-700 whitespace-pre-line'>{course?.description}</p>
         </div>
 
         <div className='mb-6'>
@@ -206,7 +123,7 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
           </div>
 
           <div className='space-y-4'>
-            {data.places.map((place, index) => (
+            {course?.places.map((place, index) => (
               <div
                 key={place.id}
                 className='flex border border-gray-200 rounded-lg overflow-hidden'>
@@ -224,7 +141,6 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
                 <div className='flex-1 p-3'>
                   <h3 className='font-bold'>{place.name}</h3>
                   <p className='text-sm text-gray-500 mb-1'>{place.address}</p>
-                  <p className='text-sm line-clamp-2'>{place.description}</p>
                 </div>
               </div>
             ))}
@@ -236,14 +152,14 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
           <div className='flex items-center gap-3 p-3 border border-gray-200 rounded-lg'>
             <div className='relative w-12 h-12 rounded-full overflow-hidden'>
               <Image
-                src={data.creator.image}
-                alt={data.creator.name}
+                src={course?.creator.image || ''}
+                alt={course?.creator.name || ''}
                 fill
                 className='object-cover'
               />
             </div>
             <div>
-              <p className='font-medium'>{data.creator.name}</p>
+              <p className='font-medium'>{course?.creator.name}</p>
               <p className='text-sm text-gray-500'>데이트 코스 큐레이터</p>
             </div>
           </div>
@@ -252,10 +168,6 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
 
       {/* Fixed bottom bar */}
       <div className='fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center max-w-xl mx-auto'>
-        <div>
-          <p className='text-sm text-gray-500'>예상 비용</p>
-          <p className='text-xl font-bold'>{data.price.toLocaleString()}원</p>
-        </div>
         <Button
           size='lg'
           className='bg-blue-500 hover:bg-blue-600'
@@ -263,7 +175,6 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
             if (!isAuthenticated) {
               router.push('/auth')
             } else {
-              // Navigation logic for authenticated users
               alert('데이트 코스가 예약되었습니다!')
             }
           }}>
