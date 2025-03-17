@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // 인증이 필요한 경로 배열
-const PROTECTED_ROUTES = ['/mypage', '/mydate', '/add']
+const PROTECTED_ROUTES = ['/mypage', '/mydate']
 
 export function middleware(request: NextRequest) {
   // 현재 경로 가져오기
