@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
       'via.placeholder.com',
       'ugc-images.catchtable.co.kr',
       'images.unsplash.com',
-      'd2ba33ltwyhxsm.cloudfront.net'
+      'd2ba33ltwyhxsm.cloudfront.net',
+      'encrypted-tbn0.gstatic.com',
+      'lh5.googleusercontent.com'
     ]
   },
   webpack: config => {
