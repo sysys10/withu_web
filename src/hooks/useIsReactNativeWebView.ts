@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 declare global {
   interface Window {
-    ReactNativeWebview?: {
+    ReactNativeWebView?: {
       postMessage: (message: string) => void
     }
   }
@@ -14,7 +14,7 @@ const useIsReactNativeWebview = () => {
   const [isReactNativeWebview, setIsReactNativeWebview] = useState(false)
 
   useEffect(() => {
-    if (window.ReactNativeWebview) setIsReactNativeWebview(true)
+    if (window.ReactNativeWebView) setIsReactNativeWebview(true)
   }, [])
 
   return isReactNativeWebview
