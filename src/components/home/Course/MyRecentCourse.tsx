@@ -3,18 +3,16 @@
 import { axiosPrivate } from '@/api/axiosInstance'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
-import { PlusIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import AddCourseButton from '@/components/AddCourseButton'
 import CourseCard, { CourseCardProps } from '@/components/common/CourseCard'
 import Section from '@/components/common/Section'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import useIsReactNativeWebview from '@/hooks/useIsReactNativeWebView'
-
-import { handleCreateCourse } from '@/utils/handleMobileAction'
 
 const getMyRecentCourse = async () => {
   try {
@@ -96,13 +94,7 @@ export default function MyRecentCourse({ name }: { name: string }) {
         ) : (
           <div className='p-6 border border-gray-200 rounded-lg text-center'>
             <p className='text-gray-600 mb-4'>아직 기록된 데이트 코스가 없어요. 기록해보세요!</p>
-            <Button
-              size='lg'
-              onClick={handleCreateCourse}
-              className='gap-2 flex items-center justify-center'>
-              <PlusIcon size={18} />
-              <span>새 데이트 코스 만들기</span>
-            </Button>
+            <AddCourseButton text='새 데이트 코스 만들기' />
           </div>
         )}
       </div>
