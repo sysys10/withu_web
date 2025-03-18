@@ -18,19 +18,16 @@ enum AuthProvider {
 
 model User {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  email           String        @unique  // 이메일을 필수로 변경
-  hashed_password String        // 비밀번호를 필수로 변경
+  email           String        @unique
+  hashed_password String
   isComplete      Boolean       @default(false)
   
   name            String?
   gender          String?
   age             Int?
-  
   profile_image   String?
   bio             String?
   is_verified     Boolean       @default(false)
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
   
   // 소셜 로그인 정보
   social_connections SocialConnection[]
@@ -39,9 +36,15 @@ model User {
   auth_tokens     AuthToken[]
   
   // 관계
-  created_courses DateCourse[]  @relation("CreatedCourses")
+  created_courses DateCourse[]
   saved_courses   SavedCourse[]
   reviews         Review[]
+  likes           Like[]        // 추가: 좋아요 기능
+  follows         Follow[]      @relation("UserFollows")
+  followers       Follow[]      @relation("UserFollowers")
+  
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
 }
 
 model SocialConnection {
@@ -49,8 +52,9 @@ model SocialConnection {
   user_id         String        @db.ObjectId
   user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   provider        AuthProvider
-  provider_user_id String       // 외부 서비스에서의 사용자 ID
-  provider_data   Json?         // 제공자로부터 받은 추가 데이터
+  provider_user_id String
+  provider_data   Json?
+  
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
@@ -67,34 +71,70 @@ model AuthToken {
   ip_address      String?
   expires_at      DateTime
   is_revoked      Boolean       @default(false)
+  
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
   @@index([user_id, refresh_token])
 }
 
-// 나머지 모델은 동일하게 유지
 model DateCourse {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   description     String
+  
+  // 생성자 정보
   creator_id      String        @db.ObjectId
-  creator         User          @relation("CreatedCourses", fields: [creator_id], references: [id])
-  thumbnail       String
+  creator         User          @relation(fields: [creator_id], references: [id])
+  
+  // 기본 코스 정보
+  places          CoursePlaces[]
+  images          CourseImage[]  // 코스 전체에 대한 이미지
+  thumbnail       String?
+  
+  // 코스 상세 정보
   tags            String[]
-  price           Int
-  total_time      Int?
-  total_distance  Int?
+  price           Int?
+  total_time      Int?          // 분 단위
+  total_distance  Int?          // 미터 단위
+  
+  // 사용자 경험 관련
+  mood            String?       // 분위기 (로맨틱, 활동적, 조용한 등)
+  best_season     String?       // 추천 계절
+  best_time       String?       // 추천 시간대
+  visited_date    DateTime?     // 직접 방문한 날짜
+  my_review       String?       // 개인적인 방문 후기
+  my_rating       Int?          // 개인적인 평가 (1-5)
+  expenses        Json?         // {food: 30000, transportation: 15000, etc: 20000}
+  
+  // 공개 여부 및 통계
   is_public       Boolean       @default(true)
   like_count      Int           @default(0)
   rating          Float         @default(0)
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
   is_recommend    Boolean       @default(false)
-
-  places          CoursePlaces[]
+  
+  // 관계
   saved_by        SavedCourse[]
   reviews         Review[]
+  likes           Like[]        // 추가: 좋아요 기능
+  
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+}
+
+// 코스 이미지
+model CourseImage {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  course_id       String        @db.ObjectId
+  course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  
+  image_url       String
+  description     String?
+  is_main         Boolean       @default(false)
+  
+  created_at      DateTime      @default(now())
+  
+  @@index([course_id])
 }
 
 model Place {
@@ -102,22 +142,56 @@ model Place {
   name            String
   address         String
   road_address    String?
+  
+  // 위치 정보
   latitude        Float
   longitude       Float
   category        String
+  
+  // 외부 API 정보
   naver_place_id  String?       @unique
   naver_category  String?
+  
+  // 상세 정보
   phone           String?
   homepage        String?
   business_hours  Json?
   description     String?
+  
+  // 이미지
+  image_url       String[]
   thumbnail       String?
+  
+  // 평가 정보
   naver_rating    Float?
   naver_review_count Int?       @default(0)
+  
+  // 개인 메모 및 경험
+  my_rating       Int?          // 개인 평가 (1-5)
+  my_notes        String?       // 개인 메모
+  my_photos       PlacePhoto[]  // 내가 찍은 사진들
+  visit_date      DateTime?     // 방문 날짜
+  
+  // 관계
+  course_places   CoursePlaces[]
+  
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
+}
+
+// 장소 사진
+model PlacePhoto {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  place_id        String        @db.ObjectId
+  place           Place         @relation(fields: [place_id], references: [id], onDelete: Cascade)
   
-  course_places   CoursePlaces[]
+  image_url       String
+  description     String?
+  taken_at        DateTime?
+  
+  created_at      DateTime      @default(now())
+  
+  @@index([place_id])
 }
 
 model CoursePlaces {
@@ -126,13 +200,43 @@ model CoursePlaces {
   course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
   place_id        String        @db.ObjectId
   place           Place         @relation(fields: [place_id], references: [id])
+  
+  // 방문 순서 및 시간
   visit_order     Int
   recommended_time Int?
-  tips            String?
+  actual_time_spent Int?        // 실제 소요 시간 (분)
+  
+  // 개인 경험
+  tips            String?       // 팁
+  rating          Int?          // 이 장소에 대한 평가 (1-5)
+  experience      String?       // 경험 메모
+  
+  // 사진
+  photos          PlaceVisitPhoto[] // 방문 시 찍은 사진
+  
+  // 이동 정보
+  transport_to_next String?     // 다음 장소까지 이동 수단
+  time_to_next    Int?          // 다음 장소까지 소요 시간 (분)
+  
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
   @@unique([course_id, visit_order])
+  @@index([place_id])
+}
+
+// 코스 내 장소 방문 사진
+model PlaceVisitPhoto {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  course_place_id String        @db.ObjectId
+  course_place    CoursePlaces  @relation(fields: [course_place_id], references: [id], onDelete: Cascade)
+  
+  image_url       String
+  description     String?
+  
+  created_at      DateTime      @default(now())
+  
+  @@index([course_place_id])
 }
 
 model SavedCourse {
@@ -141,6 +245,8 @@ model SavedCourse {
   user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   course_id       String        @db.ObjectId
   course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  
+  notes           String?       // 저장 이유나 메모
   saved_at        DateTime      @default(now())
   
   @@unique([user_id, course_id])
@@ -152,10 +258,15 @@ model Review {
   course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
   user_id         String        @db.ObjectId
   user            User          @relation(fields: [user_id], references: [id])
+  
+  // 리뷰 내용
   rating          Int
   comment         String?
   visited_date    DateTime?
+  
+  // 이미지
   images          ReviewImage[]
+  
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
   
@@ -166,6 +277,39 @@ model ReviewImage {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   review_id       String        @db.ObjectId
   review          Review        @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  
   image_url       String
+  description     String?
+  
   created_at      DateTime      @default(now())
+  
+  @@index([review_id])
+}
+
+// 추가: 좋아요 모델
+model Like {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  user_id         String        @db.ObjectId
+  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  course_id       String        @db.ObjectId
+  course          DateCourse    @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  
+  created_at      DateTime      @default(now())
+  
+  @@unique([user_id, course_id])
+  @@index([course_id])
+}
+
+// 추가: 팔로우 모델
+model Follow {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  follower_id     String        @db.ObjectId
+  follower        User          @relation("UserFollowers", fields: [follower_id], references: [id], onDelete: Cascade)
+  following_id    String        @db.ObjectId
+  following       User          @relation("UserFollows", fields: [following_id], references: [id], onDelete: Cascade)
+  
+  created_at      DateTime      @default(now())
+  
+  @@unique([follower_id, following_id])
+  @@index([following_id])
 }

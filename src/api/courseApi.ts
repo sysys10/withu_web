@@ -3,9 +3,9 @@ import { UseCourseDetailProps, UseCourseProps } from '@/hooks/query/useCourse'
 import { axiosPublic } from './axiosInstance'
 
 const getCourseDetails = async ({ id }: UseCourseDetailProps) => {
-  const { data } = await axiosPublic.post(`/api/course/details`, {
-    id
-  })
+  console.log('id', id)
+  const { data } = await axiosPublic.get(`/api/course/detail?id=${id}`)
+  console.log('data', data)
   return data
 }
 const getCourses = async ({ id, userId, placeId, tag }: UseCourseProps) => {

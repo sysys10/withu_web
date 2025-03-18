@@ -44,8 +44,11 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
     <div className='pb-20'>
       <div className='relative h-72 w-full'>
         <Image
-          src={course?.thumbnail || ''}
-          alt={course?.name || ''}
+          src={
+            course?.thumbnail ||
+            'https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=3271&auto=format&fit=crop'
+          }
+          alt={course?.name || 'hello'}
           fill
           className='object-cover'
         />
@@ -56,7 +59,6 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
         </div>
       </div>
 
-      {/* Course Info */}
       <div className='p-4'>
         <div className='flex justify-between items-start mb-2'>
           <h1 className='text-2xl font-bold'>{course?.name}</h1>
@@ -128,7 +130,7 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
                 className='flex border border-gray-200 rounded-lg overflow-hidden'>
                 <div className='relative w-24 h-24'>
                   <Image
-                    src={place.image}
+                    src={place.image_url[0]}
                     alt={place.name}
                     fill
                     className='object-cover'
@@ -151,8 +153,14 @@ export default function CourseDetail({ courseId }: { courseId: string }) {
           <div className='flex items-center gap-3 p-3 border border-gray-200 rounded-lg'>
             <div className='relative w-12 h-12 rounded-full overflow-hidden'>
               <Image
-                src={course?.creator.image || ''}
-                alt={course?.creator.name || ''}
+                src={
+                  course?.creator.image ||
+                  'https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=3271&auto=format&fit=crop'
+                }
+                alt={
+                  course?.creator.name ||
+                  'https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=3271&auto=format&fit=crop'
+                }
                 fill
                 className='object-cover'
               />

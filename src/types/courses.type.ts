@@ -8,7 +8,7 @@ interface Place {
   id: string
   name: string
   address: string
-  image: string
+  image_url: string[]
   category: string
   latitude: number
   longitude: number

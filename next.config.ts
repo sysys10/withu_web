@@ -10,7 +10,10 @@ const nextConfig: NextConfig = {
       'images.unsplash.com',
       'd2ba33ltwyhxsm.cloudfront.net',
       'encrypted-tbn0.gstatic.com',
-      'lh5.googleusercontent.com'
+      'lh5.googleusercontent.com',
+      'withus3bucket.s3.ap-northeast-2.amazonaws.com',
+      'mblogthumb-phinf.pstatic.net',
+      'search.pstatic.net'
     ]
   },
   webpack: config => {

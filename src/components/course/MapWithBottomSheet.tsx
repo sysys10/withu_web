@@ -63,7 +63,7 @@ const PlaceItem = ({
     onClick={onClick}>
     <div className='relative w-24 h-24'>
       <Image
-        src={place.image || 'https://via.placeholder.com/100'}
+        src={place.image_url[0] || 'https://via.placeholder.com/100'}
         alt={place.name}
         fill
         className='object-cover'

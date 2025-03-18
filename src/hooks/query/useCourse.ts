@@ -1,8 +1,8 @@
+'use client'
+
 import { getCourseDetails, getCourses } from '@/api/courseApi'
-import { useErrorStore } from '@/store/useErrorStore'
 import { DateCourse } from '@/types/courses.type'
-import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 export interface UseCourseProps {
   id?: string
@@ -14,36 +14,20 @@ export interface UseCourseProps {
 export interface UseCourseDetailProps {
   id: string
 }
-
 export const useCourseDetail = ({ id }: UseCourseDetailProps) => {
-  const [course, setCourse] = useState<DateCourse | null>(null)
-  const setError = useErrorStore(state => state.setError)
+  console.log('id', id)
 
-  const { isPending: isLoading } = useMutation({
-    mutationFn: () => getCourseDetails({ id }),
-    onSuccess: (data: DateCourse) => {
-      setCourse(data)
-    },
-    onError: error => {
-      setError(error.message)
-    }
+  const { data: course, isLoading } = useQuery<DateCourse>({
+    queryKey: ['courseDetail', id],
+    queryFn: () => getCourseDetails({ id })
   })
 
   return { course, isLoading }
 }
-
 export const useCourses = ({ id, userId, placeId, tag }: UseCourseProps) => {
-  const [course, setCourse] = useState<DateCourse[] | null>(null)
-  const setError = useErrorStore(state => state.setError)
-
-  const { isPending: isLoading } = useMutation({
-    mutationFn: () => getCourses({ id, userId, placeId, tag }),
-    onSuccess: (data: DateCourse[]) => {
-      setCourse(data)
-    },
-    onError: error => {
-      setError(error.message)
-    }
+  const { data: course, isLoading } = useQuery<DateCourse[]>({
+    queryKey: ['courses', id, userId, placeId, tag],
+    queryFn: () => getCourses({ id, userId, placeId, tag })
   })
 
   return { course, isLoading }
