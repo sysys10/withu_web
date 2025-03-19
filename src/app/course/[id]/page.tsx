@@ -8,5 +8,5 @@ interface CourseDetailProps {
 
 export default async function CourseDetailPage({ params }: CourseDetailProps) {
   const { id } = await params
-  return <CourseDetail courseId={id} />
+  return <CourseDetail id={id} />
 }

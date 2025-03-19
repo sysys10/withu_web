@@ -13,7 +13,10 @@ const nextConfig: NextConfig = {
       'lh5.googleusercontent.com',
       'withus3bucket.s3.ap-northeast-2.amazonaws.com',
       'mblogthumb-phinf.pstatic.net',
-      'search.pstatic.net'
+      'search.pstatic.net',
+      'mblogthumb-phinf.pstatic.net',
+      'www.culture.go.kr',
+      'randomuser.me'
     ]
   },
   webpack: config => {
