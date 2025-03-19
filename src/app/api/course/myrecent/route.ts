@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'access_token_secret') as { userId: string }
       userId = decoded.userId
     } catch (error) {
+      console.error('Token verification error:', error)
       return NextResponse.json({ courses: [] }) // Return empty courses if token is invalid
     }
 
@@ -28,28 +29,41 @@ export async function GET(req: NextRequest) {
         created_at: 'desc'
       },
       take: 4,
-      select: {
-        id: true,
-        name: true,
-        thumbnail: true,
-        price: true,
-        tags: true,
-        creator_id: true,
-        description: true
+      include: {
+        // Include the first place to get location info
+        places: {
+          include: {
+            place: true
+          },
+          orderBy: {
+            visit_order: 'asc'
+          },
+          take: 1
+        }
       }
     })
 
-    const courses =
-      myRecentCourses.length > 0
-        ? myRecentCourses.map(course => ({
-            ...course,
-            image: course.thumbnail || 'https://via.placeholder.com/150',
-            address: '서울시 강남구',
-            distance: 2.5
-          }))
-        : []
+    // Transform the data to match the expected format
+    const transformedCourses = myRecentCourses.map(course => {
+      // Get the first place if available
+      const firstPlace = course.places[0]?.place
 
-    return NextResponse.json({ courses })
+      return {
+        id: course.id,
+        name: course.name,
+        thumbnail: course.thumbnail || '',
+        description: course.description,
+        tags: course.tags,
+        price: course.price || 0,
+        creator_id: course.creator_id,
+        // Add address and distance if a place is available
+        address: firstPlace ? firstPlace.address : '주소 정보 없음',
+        // For demonstration, we're using a fixed distance
+        distance: 2.5
+      }
+    })
+
+    return NextResponse.json({ courses: transformedCourses })
   } catch (error) {
     console.error('Error fetching courses:', error)
     return NextResponse.json({ error: '코스 조회 중 오류가 발생했습니다.', courses: [] }, { status: 500 })
