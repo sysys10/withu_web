@@ -20,7 +20,7 @@ const BOTTOM_TAB_ITEMS = [
   {
     id: 4,
     icon: '/icons/calendar-clear',
-    href: '/map'
+    href: '/mypage/courses?type=wishlist'
     // nativeScreen: 'Wishlist'
   },
   {

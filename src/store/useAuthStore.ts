@@ -5,35 +5,47 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 interface AuthState {
   user: WithuUser | null
-  accessToken: string | null
   isAuthenticated: boolean
   setUser: (user: WithuUser | null) => void
-  setAccessToken: (token: string | null) => void
   logout: () => void
+  checkAuthStatus: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    set => ({
+    (set, get) => ({
       user: null,
-      accessToken: null,
       isAuthenticated: false,
+
       setUser: user =>
         set({
           user,
           isAuthenticated: !!user
         }),
-      setAccessToken: accessToken => set({ accessToken }),
+
       logout: () =>
         set({
           user: null,
-          accessToken: null,
           isAuthenticated: false
-        })
+        }),
+
+      checkAuthStatus: () => {
+        return get().isAuthenticated
+      }
     }),
     {
-      name: 'withU-auth-storage',
-      storage: createJSONStorage(() => localStorage)
+      name: 'withu-auth-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: state => ({
+        user: state.user
+          ? {
+              id: state.user.id,
+              name: state.user.name,
+              email: state.user.email
+            }
+          : null,
+        isAuthenticated: state.isAuthenticated
+      })
     }
   )
 )

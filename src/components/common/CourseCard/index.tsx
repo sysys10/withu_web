@@ -1,3 +1,4 @@
+import { Star, StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -5,17 +6,18 @@ export interface CourseCardProps {
   id: string
   name: string
   thumbnail: string
+  rating: number
   description: string
   tags: string[]
   price: number
 }
 
-export default function CourseCard({ id, name, thumbnail, description, tags, price }: CourseCardProps) {
+export default function CourseCard({ id, name, thumbnail, description, tags, rating }: CourseCardProps) {
   return (
     <Link
       href={`/course/${id}`}
-      className='min-w-[260px] bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow'>
-      <div className='relative w-full h-40'>
+      className='min-w-[220px] bg-white'>
+      <div className='relative w-full h-32 rounded-lg overflow-hidden'>
         {thumbnail ? (
           <Image
             src={thumbnail}
@@ -29,8 +31,15 @@ export default function CourseCard({ id, name, thumbnail, description, tags, pri
           </div>
         )}
       </div>
-      <div className='p-4'>
-        <h3 className='font-bold text-lg mb-1 line-clamp-1'>{name}</h3>
+      <div className='p-3'>
+        <div className='flex justify-between items-center'>
+          <h3 className='font-medium mb-1 line-clamp-1'>{name}</h3>
+          <div className='flex items-center gap-1'>
+            <StarIcon className='w-4 h-4 fill-yellow-400 text-yellow-400' />
+            <span className='text-sm text-gray-600'>{rating}</span>
+          </div>
+        </div>
+
         <p className='text-sm text-gray-600 mb-2 line-clamp-2'>{description}</p>
         <div className='flex flex-wrap gap-1 mb-2'>
           {tags &&
@@ -42,7 +51,6 @@ export default function CourseCard({ id, name, thumbnail, description, tags, pri
               </span>
             ))}
         </div>
-        <p className='font-medium text-right'>{price?.toLocaleString() || 0}원</p>
       </div>
     </Link>
   )

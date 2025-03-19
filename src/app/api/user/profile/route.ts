@@ -1,27 +1,32 @@
-// src/app/api/user/profile/route.ts
 import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
+import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Get the current user's profile
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_token_secret'
+
+// 사용자 프로필 조회 API
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('Authorization')
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : authHeader
+    // 쿠키에서 액세스 토큰 가져오기
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get('accesstoken')?.value
 
-    if (!token) {
-      return NextResponse.json({ message: '인증 정보가 없습니다. 로그인이 필요합니다.' }, { status: 401 })
+    if (!accessToken) {
+      return NextResponse.json({ error: '인증 정보가 없습니다. 로그인이 필요합니다.' }, { status: 401 })
     }
 
+    // 액세스 토큰 검증
     let userId: string
     try {
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'access_token_secret') as { userId: string }
+      const decoded = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as { userId: string }
       userId = decoded.userId
     } catch (error) {
-      return NextResponse.json({ message: '유효하지 않은 인증 정보입니다. 다시 로그인해주세요.' }, { status: 401 })
+      // 토큰 검증 실패 - 미들웨어에서 처리되어야 하지만 이중 안전장치로 여기서도 체크
+      return NextResponse.json({ error: '유효하지 않은 인증 정보입니다. 다시 로그인해주세요.' }, { status: 401 })
     }
 
-    // Get user profile
+    // 사용자 프로필 조회
     const user = await prisma.user.findUnique({
       where: {
         id: userId
@@ -49,10 +54,10 @@ export async function GET(req: NextRequest) {
     })
 
     if (!user) {
-      return NextResponse.json({ message: '사용자를 찾을 수 없습니다.' }, { status: 404 })
+      return NextResponse.json({ error: '사용자를 찾을 수 없습니다.' }, { status: 404 })
     }
 
-    // Transform user data for response
+    // 프로필 데이터 변환
     const userProfile = {
       id: user.id,
       email: user.email,
@@ -75,31 +80,34 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(userProfile)
   } catch (error) {
     console.error('Error fetching user profile:', error)
-    return NextResponse.json({ message: '프로필을 불러오는 중 오류가 발생했습니다.' }, { status: 500 })
+    return NextResponse.json({ error: '프로필을 불러오는 중 오류가 발생했습니다.' }, { status: 500 })
   }
 }
 
-// Update user profile
+// 사용자 프로필 업데이트 API
 export async function PATCH(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('Authorization')
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : authHeader
+    // 쿠키에서 액세스 토큰 가져오기
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get('accesstoken')?.value
 
-    if (!token) {
-      return NextResponse.json({ message: '인증 정보가 없습니다. 로그인이 필요합니다.' }, { status: 401 })
+    if (!accessToken) {
+      return NextResponse.json({ error: '인증 정보가 없습니다. 로그인이 필요합니다.' }, { status: 401 })
     }
 
+    // 액세스 토큰 검증
     let userId: string
     try {
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'access_token_secret') as { userId: string }
+      const decoded = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as { userId: string }
       userId = decoded.userId
     } catch (error) {
-      return NextResponse.json({ message: '유효하지 않은 인증 정보입니다. 다시 로그인해주세요.' }, { status: 401 })
+      return NextResponse.json({ error: '유효하지 않은 인증 정보입니다. 다시 로그인해주세요.' }, { status: 401 })
     }
 
+    // 요청 본문 파싱
     const { name, gender, age, profileImage, bio } = await req.json()
 
-    // Update user profile
+    // 사용자 프로필 업데이트
     const updatedUser = await prisma.user.update({
       where: {
         id: userId
@@ -107,10 +115,10 @@ export async function PATCH(req: NextRequest) {
       data: {
         name: name || undefined,
         gender: gender || undefined,
-        age: age ? parseInt(age) : undefined,
+        age: age ? parseInt(age.toString()) : undefined,
         profile_image: profileImage || undefined,
         bio: bio || undefined,
-        isComplete: true // Mark profile as complete when user updates it
+        isComplete: true // 프로필 수정 시 완료 표시
       },
       select: {
         id: true,
@@ -141,6 +149,6 @@ export async function PATCH(req: NextRequest) {
     })
   } catch (error) {
     console.error('Error updating user profile:', error)
-    return NextResponse.json({ message: '프로필을 업데이트하는 중 오류가 발생했습니다.' }, { status: 500 })
+    return NextResponse.json({ error: '프로필을 업데이트하는 중 오류가 발생했습니다.' }, { status: 500 })
   }
 }

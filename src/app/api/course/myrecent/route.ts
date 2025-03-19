@@ -1,24 +1,27 @@
-// src/app/api/course/myrecent/route.ts
 import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
+import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_token_secret'
 
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('Authorization')
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : authHeader
+    // 쿠키에서 액세스 토큰 가져오기
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get('accesstoken')?.value
 
-    if (!token) {
-      return NextResponse.json({ courses: [] }) // Return empty courses if not authenticated
+    if (!accessToken) {
+      return NextResponse.json({ courses: [] }) // 인증되지 않은 경우 빈 배열 반환
     }
 
     let userId: string
     try {
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'access_token_secret') as { userId: string }
+      const decoded = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as { userId: string }
       userId = decoded.userId
     } catch (error) {
       console.error('Token verification error:', error)
-      return NextResponse.json({ courses: [] }) // Return empty courses if token is invalid
+      return NextResponse.json({ courses: [] }) // 토큰 검증 실패 시 빈 배열 반환
     }
 
     const myRecentCourses = await prisma.dateCourse.findMany({

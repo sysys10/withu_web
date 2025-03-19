@@ -5,7 +5,7 @@ export default function TopBar() {
   return (
     <header className='h-14 px-2 fixed max-w-xl mx-auto top-0 right-0 left-0 bg-white z-50'>
       <nav className='flex h-full items-center justify-between'>
-        <Link href='/'>
+        <Link href='/home'>
           <Image
             src='/WithU_Logo.png'
             alt='logo'

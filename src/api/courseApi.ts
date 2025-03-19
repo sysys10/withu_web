@@ -5,7 +5,6 @@ import { UseCourseDetailProps, UseCourseProps } from '@/hooks/query/useCourse'
 
 import { axiosPrivate, axiosPublic } from './axiosInstance'
 
-// Get course details by ID
 export const getCourseDetails = async ({ id }: UseCourseDetailProps): Promise<DateCourse> => {
   try {
     const { data } = await axiosPublic.get(`/api/course/detail?id=${id}`)
@@ -16,7 +15,6 @@ export const getCourseDetails = async ({ id }: UseCourseDetailProps): Promise<Da
   }
 }
 
-// Get courses with optional filters
 export const getCourses = async ({ id, userId, placeId, tag }: UseCourseProps): Promise<DateCourse[]> => {
   try {
     const { data } = await axiosPublic.post(`/api/courses`, {
@@ -32,7 +30,6 @@ export const getCourses = async ({ id, userId, placeId, tag }: UseCourseProps): 
   }
 }
 
-// Get recommended courses
 export const getRecommendedCourses = async (): Promise<{ courses: DateCourse[] }> => {
   try {
     const { data } = await axiosPublic.get('/api/course/recommend')

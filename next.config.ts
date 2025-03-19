@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
       'search.pstatic.net',
       'mblogthumb-phinf.pstatic.net',
       'www.culture.go.kr',
-      'randomuser.me'
+      'randomuser.me',
+      'www.visitseoul.net',
+      'www.agoda.com'
     ]
   },
   webpack: config => {

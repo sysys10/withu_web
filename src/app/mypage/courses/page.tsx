@@ -75,6 +75,7 @@ const SAVED_COURSES = [
 
 export default function UserCoursesPage() {
   const router = useRouter()
+
   const searchParams = useSearchParams()
   const type = searchParams.get('type') || 'created'
 
@@ -115,7 +116,6 @@ export default function UserCoursesPage() {
       </div>
 
       <div className='pt-20 px-4'>
-        {/* Type selector */}
         <div className='flex border border-gray-200 rounded-lg overflow-hidden mb-6'>
           <button
             onClick={() => changeType('created')}

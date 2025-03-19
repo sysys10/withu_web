@@ -1,31 +1,15 @@
 'use client'
 
-import { axiosPublic } from '@/api/axiosInstance'
-import { useQuery } from '@tanstack/react-query'
 import { useRef } from 'react'
 
 import CourseCard, { CourseCardProps } from '@/components/common/CourseCard'
 import Section from '@/components/common/Section'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const getRecommendCourse = async () => {
-  const response = await axiosPublic.get('/api/course/recommend')
-  return response.data
-}
-
-function useRecommendCourse() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['courses', 'recommend'],
-    queryFn: getRecommendCourse,
-    select: data => data.courses,
-    staleTime: 1000 * 60 * 60 * 24
-  })
-
-  return { data, isLoading, error }
-}
+import { useRecommendCourse } from './hooks/useRecommendCourse'
 
 export default function RecommendCourse({ name }: { name: string }) {
-  const { data, isLoading, error } = useRecommendCourse()
+  const { data, isLoading } = useRecommendCourse()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -39,14 +23,15 @@ export default function RecommendCourse({ name }: { name: string }) {
               {[...Array(3)].map((_, i) => (
                 <Skeleton
                   key={i}
-                  className='min-w-[260px] h-64'
+                  className='min-w-[260px] h-40'
                 />
               ))}
             </div>
-          ) : data?.length > 0 ? (
+          ) : data && data.length > 0 ? (
             <div className='flex gap-4 pb-1'>
               {data.map((item: CourseCardProps) => (
                 <CourseCard
+                  rating={item.rating}
                   key={item.id}
                   id={item.id}
                   name={item.name}
